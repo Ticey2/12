@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Response, Path, Query, Body, Header, status, Depends
+from datetime import datetime
+
+from fastapi import FastAPI, Response, Path, Query, Body, Header, status, Depends, Request
 from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse, FileResponse
 from fastapi.security import OAuth2PasswordBearer
 import uvicorn
@@ -9,6 +11,15 @@ from public.goods import good_router
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = datetime.now() # начало работы метода
+    response = await call_next(request) # передача запроса соответствующему оператру пути и ожидание ответа
+    end_time = datetime.now() # кончание работы метода
+    response.headers["X-Process-Time"] = f'{end_time} : {start_time}'
+    return response
+
 @app.get("/items/", response_class=JSONResponse)
 async def read_items(token: str = Depends(oauth2_scheme)):
     return JSONResponse(content={"token": token})
@@ -24,7 +35,6 @@ def notfind():
     return {"message": "Нет такого ресурса"}
 @app.get('/')
 def f_indexH():
-
     content = {"FIO": "Половикова Ольга Николаевна"}
     headers = {"X-Cat-Dog": "alone in the world", "Content-Language": "en-US"}
     return JSONResponse(content=content, headers=headers)
