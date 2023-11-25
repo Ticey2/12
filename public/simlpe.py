@@ -1,5 +1,5 @@
 from typing import Optional, Union
-from fastapi import Depends, FastAPI, Header, HTTPException,
+from fastapi import Depends, FastAPI, Header, HTTPException
 
 
 def verify_token(x_token: str = Header()):
@@ -17,7 +17,7 @@ def verify_token(x_token: str = Header()):
 app = FastAPI(dependencies = [Depends(verify_token)])
 
 @app.get("/items/")
-def read_items(obj = Depends(get_db())):
+def read_items(obj = Depends()):
     return obj
 
 class Read_Params:
