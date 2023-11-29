@@ -113,7 +113,7 @@ def f_indexH():
 
 @app.get('/file')
 def f_indexF():
-    return FileResponse("files/index.html", filename="1.html", media_type="application/octet-steam")
+    return FileResponse("../index.html", filename="1.html", media_type="application/octet-steam")
 
 @app.get("/header")
 async def read_header(user_agent: Annotated[Union[str, None], Header()] = None):

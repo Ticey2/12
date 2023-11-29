@@ -5,6 +5,7 @@ from models.good import Main_User, Main_UserDB, New_Respons, Tags, Good
 import hashlib
 from typing import Union, Annotated
 from fastapi.encoders import jsonable_encoder
+from main import
 
 # реализация маршрутов для операций c конкретными тегами - конкретизация роутера
 users_router = APIRouter(tags=[Tags.users])
@@ -76,7 +77,8 @@ def get_user_dict():
 def create_user(item: Annotated[Main_User, Body(embed=True, description="Новый пользователь")]):
 
     user = Main_UserDB(name=item.name, id=item.id, password=coder_passwd(item.name))
-
+    query = ( users.insert().values(title=post.title, description=post.description, completed=False)
+    )
     # добавляем объект в список
     users_list.append(user)
 
@@ -84,6 +86,12 @@ def create_user(item: Annotated[Main_User, Body(embed=True, description="Нов�
     user_encoder = jsonable_encoder(user)
     user_dict[str(item.id)] = user_encoder
     return user_encoder
+
+@app.post("/set_task", response_model=Task, status_code=status.HTTP_201_CREATED)
+async def create_task(post: TaskSet):
+
+    last_record_id = await database.execute(query=query)
+    return {"id": last_record_id, **post.model_dump(), "completed": False}
 
 @users_router.put("/api/users", response_model=Union[Main_User, New_Respons], tags=[Tags.users])
 def edit_person(item: Annotated[Main_User, Body(embed=True, description="Изменяем данные для пользователя по id")]):
@@ -109,3 +117,47 @@ def delete_person(id: int):
     # если пользователь найден, удаляем его
     users_list.remove(user)
     return users_list
+
+
+@app.post("/set_task", response_model=Task, status_code=status.HTTP_201_CREATED)
+async def create_task(post: TaskSet):
+    query = (
+        tasks.insert()
+        .values(title=post.title, description=post.description, completed=False)
+    )
+    last_record_id = await database.execute(query=query)
+    return {"id": last_record_id, **post.model_dump(), "completed": False}
+
+@app.get('/read_task/{task_id}', response_model=Task)
+async def read_task(task_id: int):
+    query = tasks.select().where(tasks.c.id == task_id)
+    if res := await database.fetch_one(query=query):
+        return res
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f'Task with id:{task_id} not found'
+    )
+
+@app.post('/update_task', response_model=Task)
+async def update_task(post: Task):
+    query = (
+        tasks.update()
+        .where(tasks.c.id == post.id)
+        .values(title=post.title, description=post.description, completed=post.completed)
+    )
+    if await database.execute(query=query):
+        return {**post.model_dump()}
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f'Task with id:{post.id} not found'
+    )
+
+@app.delete("/delete_task/{task_id}")
+async def delete_task(task_id: int):
+    query = tasks.delete().where(tasks.c.id == task_id)
+    if await database.execute(query):
+        return {"detail": f'Task with id: {task_id} deleted'}
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f'Task with id:{task_id} not found'
+    )

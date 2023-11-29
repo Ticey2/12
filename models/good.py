@@ -1,7 +1,28 @@
 from typing import Union, Annotated
 from pydantic import BaseModel, Field, HttpUrl
+from sqlalchemy import Column, String, Integer, Float, Boolean, ForeignKey
+from pydantic import BaseModel
 from enum import Enum
 
+from sqlalchemy.orm import relationship
+
+from main import metadata
+
+class User(metadata):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True, nullable=False)
+    hashed_password = Column(String)
+    goods = relationship("Good", back_populates="owner")
+class Good(metadata):
+    __tablename__ = "goods"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    description = Column(String, index=True)
+    price = Column(Float)
+    nalog = Column(Float)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="goods")
 
 class Tags(Enum):
     users = "users"

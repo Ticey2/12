@@ -6,6 +6,7 @@ import hashlib
 from typing import Union, Annotated
 from fastapi.encoders import jsonable_encoder
 
+
 good_router = APIRouter(tags=[Tags.good])
 
 good_dict = {}
