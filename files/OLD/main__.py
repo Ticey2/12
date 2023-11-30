@@ -1,12 +1,7 @@
-from datetime import datetime
-from fastapi import FastAPI, Response, Path, Query, Body, Header, status, Depends, Request
-from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse, FileResponse
-from public.users import users_router, info_router
-from public.goods import good_router
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Header
+from fastapi.responses import JSONResponse
 from models import tables
-from models.db import engine, database
-import asyncpg
+from public.db import engine, database
 
 app = FastAPI()
 

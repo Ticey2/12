@@ -51,7 +51,7 @@ def edit_good(item: Annotated[Good, Body(embed=True, description="Изменяе
         update_good_dict = item.dict(exclude_unset=True) #преобразуем объект модели в словарь, но только только те данные,
         # которые были установлены (отправлены в запросе), без значений по умолчанию (данные для изменения в удобный
         # формат)
-        good_model_copy = good_model.copy(update=update_good_dict) # одновляем данные  модели на новые
+        good_model_copy = good_model.copy(update=update_good_dict) # обновляем данные  модели на новые
         good_dict[str(item.id)] = jsonable_encoder(good_model_copy)
         return good_model_copy
     except HTTPException:

@@ -26,7 +26,6 @@ class Read_Params:
         self.skip = skip
         self. limit = limit
 
-
 @app.get("/users/")
 def read_users(obj: Read_Params = Depends(Read_Params)):
     return obj
