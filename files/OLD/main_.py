@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, Path, Query, Body, Header
+from fastapi import FastAPI, Path, Query, Body, Header
 from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse, FileResponse
 from models.good import Good
 from models.good import User
@@ -7,6 +7,17 @@ from typing import Union, Annotated
 
 app = FastAPI()
 
+@app.on_event("startup")
+async def startup():
+    await DB.connect()
+    with open("log.txt", mode="a") as log:
+        log.write(f'{datetime.utcnow()}: Begin\n')
+
+@app.on_event("shutdown")
+async def shutdown():
+    await DB.disconnect()
+    with open("log.txt", mode="a") as log:
+        log.write(f'{datetime.utcnow()}:End\n')
 
 # аннотирование параметров
 @app.get("/params/{p}")
