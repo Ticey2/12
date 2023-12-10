@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from fastapi import APIRouter, Body, status, HTTPException, Depends
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
-#from sqlalchemy.ext.asyncio import create_async_engine, async_session
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession,async_session
 #from sqlalchemy.sql.functions import user
 
 from models.good import Main_User, New_Respons, Tags, User, Base
@@ -14,15 +14,25 @@ from typing import Union, Annotated
 
 #settings.DATABASE_URL = 'sqlite:///./test02.db
 
-engine = create_engine(settings.POSTGRES_DATABASE_URL)
+#engine = create_engine(settings.POSTGRES_DATABASE_URL)
 
-#engine = create_async_engine(settings.DATABASE_URL, echo=True)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_async_engine(settings.POSTGRES_DATABASE_URL, echo=True)
+SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-#SessionLocal_ = async_session(engine)
+#SessionLocal = async_session(engine)
 
-def init_db():
-    Base.metadata.create_all(bind=engine)
+#def init_db():
+#    Base.metadata.create_all(bind=engine)
+#async def init_db():
+#   async with engine.begin() as conn:
+#        await conn.run.sync(Base.metadata.create_all)
+
+async def get_async_session():
+    async with async_session(engine) as session:
+        try:
+          yield session
+        finally:
+          session.close()
 
 def get_session():
     with Session(engine) as session:
@@ -30,6 +40,7 @@ def get_session():
           yield session
         finally:
           session.close()
+
 
 # реализация маршрутов для операций c конкретными тегами - конкретизация роутера
 users_router = APIRouter(tags=[Tags.users], prefix='/api/users')

@@ -6,9 +6,6 @@ from starlette.middleware.cors import CORSMiddleware
 from public.router_users import init_db
 from public.router_users import users_router
 
-from config import settings
-import os
-
 app = FastAPI()
 
 app.add_middleware(

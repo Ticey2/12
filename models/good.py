@@ -1,6 +1,6 @@
 from typing import Union, Annotated
 from pydantic import BaseModel, Field, HttpUrl
-from sqlalchemy import Column, String, Integer, Float, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, Sequence, Float, Boolean, ForeignKey
 from sqlalchemy.orm import declarative_base
 
 from enum import Enum
@@ -9,7 +9,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence("user_id_seq", start=1), primary_key=True)
     name = Column(String, index=True, nullable=False)
     hashed_password = Column(String)
 
