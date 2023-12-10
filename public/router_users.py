@@ -10,13 +10,15 @@ from models.good import Main_User, New_Respons, Tags, User, Base
 from config import settings
 from typing import Union, Annotated
 
-
 # определяем параметры для подключения
 
-#settings.DATABASE_URL = 'sqlite:///./test02.db'
-engine = create_engine(settings.DATABASE_URL, connect_args={"check_same_thread": False})
+#settings.DATABASE_URL = 'sqlite:///./test02.db
+
+engine = create_engine(settings.POSTGRES_DATABASE_URL)
+
 #engine = create_async_engine(settings.DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 #SessionLocal_ = async_session(engine)
 
 def init_db():

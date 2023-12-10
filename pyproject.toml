@@ -20,6 +20,8 @@ asyncpg = "^0.29.0"
 aiosqlite = "^0.19.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
 pydantic-settings = "^2.1.0"
+fastapi-sqlalchemy = "^0.2.1"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
