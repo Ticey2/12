@@ -23,9 +23,9 @@ SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 #def init_db():
 #    Base.metadata.create_all(bind=engine)
-#async def init_db():
-#   async with engine.begin() as conn:
-#        await conn.run.sync(Base.metadata.create_all)
+async def init_db():
+   async with engine.begin() as conn:
+        await conn.run.sync(Base.metadata.create_all)
 
 async def get_async_session():
     async with async_session(engine) as session:
@@ -49,7 +49,7 @@ def coder_passwd(cod: str):
     return cod*2
 
 @users_router.get("/{id}", response_model=Union[New_Respons, Main_User], tags=[Tags.info])
-def get_user_(id: int, response: Response, DB: Session = Depends(get_session)):
+def get_user_(id: int, response: Response, DB: Session = Depends(get_async_session)):
     '''
     получаем пользователя по id
     '''
@@ -61,7 +61,7 @@ def get_user_(id: int, response: Response, DB: Session = Depends(get_session)):
     else:
         return user
 @users_router.get("/", response_model=Union[list[Main_User], New_Respons], tags=[Tags.users])
-def get_user_db(DB: Session = Depends(get_session) ):
+def get_user_db(DB: Session = Depends(get_async_session) ):
     '''
     получаем все записи таблицы
     '''
@@ -71,7 +71,7 @@ def get_user_db(DB: Session = Depends(get_session) ):
         return JSONResponse(status_code=404, content={"message": "Пользователи не найдены"})
     return users
 @users_router.post("/", response_model=Union[Main_User, New_Respons], tags=[Tags.users], status_code=status.HTTP_201_CREATED)
-def create_user(item: Annotated[Main_User, Body(embed=True, description="Новый пользователь")],  DB: Session = Depends(get_session)):
+def create_user(item: Annotated[Main_User, Body(embed=True, description="Новый пользователь")],  DB: Session = Depends(get_async_session)):
     try:
       user = User(id=item.id, name=item.name, hashed_password=coder_passwd(item.name))
 
@@ -86,7 +86,8 @@ def create_user(item: Annotated[Main_User, Body(embed=True, description="Нов�
 
 
 @users_router.put("/", response_model=Union[Main_User, New_Respons], tags=[Tags.users])
-def edit_user_(item: Annotated[Main_User, Body(embed=True, description="Изменяем данные для пользователя по id")], DB: Session = Depends(get_session)):
+def edit_user_(item: Annotated[Main_User,
+Body(embed=True, description="Изменяем данные для пользователя по id")], DB: Session = Depends(get_async_session)):
     # получаем пользователя по id
     user = DB.query(User).filter(User.id == item.id).first()
     # если не найден, отправляем статусный код и сообщение об ошибке
@@ -102,7 +103,7 @@ def edit_user_(item: Annotated[Main_User, Body(embed=True, description="Изме
     return user
 
 @users_router.delete("/{id}", response_class=JSONResponse, tags=[Tags.users])
-def delete_user(id: int, DB: Session = Depends(get_session)):
+def delete_user(id: int, DB: Session = Depends(get_async_session)):
     # получаем пользователя по id
     user = DB.query(User).filter(User.id == id).first()
 

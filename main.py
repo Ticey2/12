@@ -5,8 +5,11 @@ from datetime import datetime
 from starlette.middleware.cors import CORSMiddleware
 from public.router_users import init_db
 from public.router_users import users_router
-
+import databases
+from config import settings
 app = FastAPI()
+
+DB = databases.Database(settings.POSTGRES_DATABASE_URL)
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,19 +18,25 @@ app.add_middleware(
     allow_headers=["*"]
 )
 app.include_router(users_router)
-@app.on_event("startup")
-def on_startup():
-    open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: Begin\n')
-    init_db()
+#@app.on_event("startup")
+#def on_startup():
+#    open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: Begin\n')
+#    init_db()
 
+@app.on_event("startup")
+async def startup():
+    init_db()
+    # когда приложение запускается устанавливаем соединение с БД
+    await DB.connect()
+
+#@app.on_event("shutdown")
+#def shutdown():
+ #   open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: End\n')
 @app.on_event("shutdown")
-def shutdown():
-    open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: End\n')
-# @app.on_event("shutdown")
-# async def shutdown():
-#     await DB.disconnect()
-#     with open("log.txt", mode="a") as log:
-#         log.write(f'{datetime.utcnow()}:End\n')
+async def shutdown():
+     await DB.disconnect()
+     with open("log.txt", mode="a") as log:
+         log.write(f'{datetime.utcnow()}:End\n')
 @app.get("/")
 def main():
     return FileResponse("files/index.html")

@@ -8,7 +8,7 @@ class Settings:
     POSTGRES_DATABASE_URL: str = "postgresql://user:password@postgresserver/db"
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
-    POSTGRES_HOSTNAME: str
+    POSTGRES_HOST: str
     POSTGRES_PORT: int
     POSTGRES_DB: str
 
