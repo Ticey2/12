@@ -9,7 +9,7 @@ import databases
 from config import settings
 app = FastAPI()
 
-DB = databases.Database(settings.POSTGRES_DATABASE_URL)
+#DB = databases.Database(settings.POSTGRES_DATABASE_URL)
 
 app.include_router(users_router)
 #@app.on_event("startup")
@@ -17,19 +17,21 @@ app.include_router(users_router)
 #    open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: Begin\n')
 #    init_db()
 
-@app.on_event("startup")
-async def startup():
+#@app.on_event("startup")
+#async def startup():
     # когда приложение запускается устанавливаем соединение с БД
-    await DB.connect()
+    #await DB.connect()
 
 #@app.on_event("shutdown")
 #def shutdown():
  #   open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: End\n')
-@app.on_event("shutdown")
-async def shutdown():
-     await DB.disconnect()
-     with open("log.txt", mode="a") as log:
-         log.write(f'{datetime.utcnow()}:End\n')
+#@app.on_event("shutdown")
+#async def shutdown():
+    #await DB.disconnect()
+    #with open("log.txt", mode="a") as log:
+        #log.write(f'{datetime.utcnow()}:End\n')
+
+
 @app.get("/")
 def main():
     return FileResponse("files/index.html")
