@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from fastapi import APIRouter, Body, status, HTTPException, Depends
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy.orm import sessionmaker, declarative_base, Session
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession,async_session
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_session
 #from sqlalchemy.sql.functions import user
 
 from models.good import Main_User, New_Respons, Tags, User, Base
@@ -19,13 +19,14 @@ from typing import Union, Annotated
 engine = create_async_engine(settings.POSTGRES_DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
+Base.metadata.create_all(bind=engine)
 #SessionLocal = async_session(engine)
 
 #def init_db():
 #    Base.metadata.create_all(bind=engine)
-async def init_db():
-   async with engine.begin() as conn:
-        await conn.run.sync(Base.metadata.create_all)
+#def init_db():
+#   async with engine.begin() as conn:
+#        await conn.run.sync(Base.metadata.create_all)
 
 async def get_async_session():
     async with async_session(engine) as session:
@@ -71,7 +72,8 @@ def get_user_db(DB: Session = Depends(get_async_session) ):
         return JSONResponse(status_code=404, content={"message": "Пользователи не найдены"})
     return users
 @users_router.post("/", response_model=Union[Main_User, New_Respons], tags=[Tags.users], status_code=status.HTTP_201_CREATED)
-def create_user(item: Annotated[Main_User, Body(embed=True, description="Новый пользователь")],  DB: Session = Depends(get_async_session)):
+def create_user(item: Annotated[Main_User,
+Body(embed=True, description="Новый пользователь")],  DB: Session = Depends(get_async_session)):
     try:
       user = User(id=item.id, name=item.name, hashed_password=coder_passwd(item.name))
 
@@ -118,7 +120,8 @@ def delete_user(id: int, DB: Session = Depends(get_async_session)):
     return JSONResponse(content={'message' : f'Пользователь удалён {id}'})
 
 @users_router.patch("/{id}", response_model=Union[Main_User, New_Respons], tags=[Tags.users])
-def edit_user(item: Annotated[Main_User, Body(embed=True, description="Изменяем данные gjk по id")],  DB: Session = Depends(get_session)):
+def edit_user(item: Annotated[Main_User,
+Body(embed=True, description="Изменяем данные по id")], DB: Session = Depends(get_async_session)):
     # получаем пользователя по id
     try:
         item_good = find_good(str(item.id)) #нашли элемент по ключу
