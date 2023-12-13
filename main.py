@@ -1,12 +1,9 @@
 import uvicorn
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from datetime import datetime
-from starlette.middleware.cors import CORSMiddleware
 #from public.router_users import init_db
 from public.router_users import users_router
-import databases
-from config import settings
+
 app = FastAPI()
 
 #DB = databases.Database(settings.POSTGRES_DATABASE_URL)
