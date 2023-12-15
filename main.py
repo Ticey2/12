@@ -1,14 +1,17 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from db import create_tables as create_tables
 #from public.router_users import init_db
-from public.router_users import users_router
+
+#rom public.router_users import users_router
 
 app = FastAPI()
+create_tables()
 
 #DB = databases.Database(settings.POSTGRES_DATABASE_URL)
 
-app.include_router(users_router)
+#app.include_router(users_router)
 #@app.on_event("startup")
 #def on_startup():
 #    open("log_p.txt", mode="a").write(f'{datetime.utcnow()}: Begin\n')
@@ -33,5 +36,5 @@ app.include_router(users_router)
 def main():
     return FileResponse("files/index.html")
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="127.0.0.1", port=8000)

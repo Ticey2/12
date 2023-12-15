@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Header
 from fastapi.responses import JSONResponse
 from models import tables
-from public.db import engine, database
+from venv.db import engine, database
 
 app = FastAPI()
 

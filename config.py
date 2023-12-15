@@ -5,8 +5,8 @@ class Settings:
     app_name: str = "New API"
     admin_email: str = "ponOlgap@gmail.com"
     DATABASE_URL: str = "sqlite:///./test02.db"
-    POSTGRES_DATABASE_URLS: str = "postgresql+psycopg://postgres:900@localhost:5430/DBTest03"
-    POSTGRES_DATABASE_URLA: str = "postgresql+asyncpg://postgres:900@localhost:5430/DBTest03"
+    POSTGRES_DATABASE_URLS: str = "postgresql://postgres:postgres@localhost:5432/db"
+    POSTGRES_DATABASE_URLA: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/db"
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
@@ -22,7 +22,7 @@ settings.POSTGRES_USER = os.environ.get('POSTGRES_USER')
 settings.POSTGRES_DB = os.environ.get('POSTGRES_DB')
 
 settings.POSTGRES_HOST = os.environ.get('POSTGRES_HOST')
-settings.POSTGRES_DATABASE_URLS = f"postgresql+psycopg:" \
+settings.POSTGRES_DATABASE_URLS = f"postgresql:" \
                                  f"//{settings.POSTGRES_USER}:" \
                                  f"{settings.POSTGRES_PASSWORD}" \
                                  f"@{settings.POSTGRES_HOST}:" \

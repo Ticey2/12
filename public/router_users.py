@@ -1,7 +1,7 @@
 #from sqlalchemy.orm import sessionmaker, declarative_base, Session
 #from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_session
 #from models.good import Main_User, New_Respons, Tags, User, Base
-from venv.config import settings
+from config import settings
 from sqlalchemy import create_engine, text
 # определяем параметры для подключения
 
