@@ -1,8 +1,7 @@
 from typing import Union, Annotated
 from pydantic import BaseModel, Field, HttpUrl
-from sqlalchemy import Column, String, Integer, Sequence, Float, Boolean, ForeignKey, MetaData
+from sqlalchemy import Column, String, Integer, Identity, Sequence, Float, Boolean, ForeignKey, MetaData
 from sqlalchemy.orm import declarative_base
-
 from enum import Enum
 
 Base = declarative_base()
@@ -13,15 +12,13 @@ Base = declarative_base()
 #     name = Column(String, index=True, nullable=False)
 #     folder = Column(String, nullable=True)
 #     hashed_password = Column(String)
-
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, Sequence("user_id_seq", start=1), primary_key=True)
+    id = Column(Integer, Identity(start=10), primary_key=True)
     name = Column(String, index=True, nullable=False)
     hashed_password = Column(String)
 
     # goods = relationship("Good", back_populates="owner")
-
 
 # class Good(metadata):
 #     __tablename__ = "goods"
@@ -32,7 +29,6 @@ class User(Base):
 #     nalog = Column(Float)
 #     user_id = Column(Integer, ForeignKey("users.id"))
 # owner = relationship("User", back_populates="goods")
-
 class Tags(Enum):
     users = "users"
     advents = "advents"
