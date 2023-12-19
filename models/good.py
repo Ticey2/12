@@ -28,7 +28,7 @@ class User(Base):
 #     price = Column(Float)
 #     nalog = Column(Float)
 #     user_id = Column(Integer, ForeignKey("users.id"))
-# owner = relationship("User", back_populates="goods")
+#     owner = relationship("User", back_populates="goods")
 class Tags(Enum):
     users = "users"
     advents = "advents"

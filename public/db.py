@@ -3,6 +3,7 @@ from config import settings
 from sqlalchemy import Column, String, Integer, Sequence, insert, select
 from sqlalchemy import create_engine, text
 from models.good import Base, User
+from models.users import Base_db, Staff, Categor
 from sqlalchemy.orm import declarative_base
 # определяем параметры для подключения
 # settings.DATABASE_URL = 'sqlite:///./test02.db
@@ -14,9 +15,12 @@ engine_s = create_engine(ur_s, echo=True)
 
 # engine_a = create_async_engine(ur_a, echo=True)
 def create_tables():
-    Base.metadata.drop_all(bind=engine_s)
-    Base.metadata.create_all(bind=engine_s)
+    pass
+    # Base_db.metadata.create_all(engine_s)
+    # Base.metadata.drop_all(bind=engine_s)
+    # Base.metadata.create_all(bind=engine_s)
     # metadata.create_all(bind=engine_s)
+
 
 def f():
     with engine_s.connect() as conn:
