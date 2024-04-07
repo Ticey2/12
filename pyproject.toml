@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["ponOlgap <ponOlgap@gmail.com>"]
 readme = "README.md"
-
+docker
 [tool.poetry.dependencies]
 python = "^3.9"
 fastapi = "^0.103.2"
@@ -14,7 +14,6 @@ async-generator = "^1.10"
 python-multipart = "^0.0.6"
 certifi = "^2023.11.17"
 pylint = "^3.0.2"
-alembic = "^1.12.1"
 asyncpg = "^0.29.0"
 aiosqlite = "^0.19.0"
 pydantic-settings = "^2.1.0"
@@ -23,7 +22,9 @@ python-dotenv = "^1.0.0"
 postgres = "^4.0"
 psycopg = "^3.1.14"
 sqlalchemy = "2"
-
+alembic = "^1.13.0"
+flower = "^2.0.1"
+gunicorn = "^21.2.0"
 
 [build-system]
 requires = ["poetry-core"]

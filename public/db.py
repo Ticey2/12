@@ -1,15 +1,16 @@
 
 from config import settings
-from sqlalchemy import Column, String, Integer, Sequence, insert, select
+from sqlalchemy import insert, select
 from sqlalchemy import create_engine, text
-from models.good import Base, User
-from models.users import Base_db, Staff, Categor
-from sqlalchemy.orm import declarative_base
+from models.good import User
+from models.users import Categor, Staff
+
 # определяем параметры для подключения
 # settings.DATABASE_URL = 'sqlite:///./test02.db
 #ur_p = "postgresql://postgres:900@localhost:5432/dbtest04"
 ur_s = settings.POSTGRES_DATABASE_URLS
 ur_a = settings.POSTGRES_DATABASE_URLA
+
 print(ur_s)
 engine_s = create_engine(ur_s, echo=True)
 
@@ -29,9 +30,9 @@ def f():
 
 def f_bilder():
     with engine_s.connect() as conn:
-        query = insert(User).values([
-            {"name": "SSSuiu", "hashed_password": "123545"},
-            {"name": "СSidorkin", "hashed_password": "123545"}
+        query = insert(Categor).values([
+            {"title": "SSSuiu", "description": "123545"},
+            {"title": "SSSuiu22", "description": "12354445"}
         ])
         conn.execute(query)
         conn.execute(text('commit;'))
@@ -39,5 +40,6 @@ def f_bilder():
         answer = conn.execute(query)
         print(f"answer = {answer.all()}")
 
+#f_bilder()
 # asyncio.run(f())
 # asyncio.get_event_loop().run_until_complete(f())
