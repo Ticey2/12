@@ -2,6 +2,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from datetime import datetime
+
+from public.db import create_tables
 #from db import f
 #from public.router_users import init_db
 from public.router_users import users_router
@@ -10,6 +12,8 @@ app = FastAPI()
 #f()
 #f_bilder()
 #f_bilder()
+
+create_tables()
 
 app.include_router(users_router)
 @app.on_event("startup")

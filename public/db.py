@@ -2,7 +2,7 @@
 from config import settings
 from sqlalchemy import insert, select
 from sqlalchemy import create_engine, text
-from models.good import User
+from models.good import User, Base
 from models.users import Categor, Staff
 
 # определяем параметры для подключения
@@ -16,8 +16,9 @@ engine_s = create_engine(ur_s, echo=True)
 
 # engine_a = create_async_engine(ur_a, echo=True)
 def create_tables():
-    pass
-    # Base_db.metadata.create_all(engine_s)
+    #pass
+    Base.metadata.drop_all(bind=engine_s)
+    Base.metadata.create_all(bind=engine_s)
     # Base.metadata.drop_all(bind=engine_s)
     # Base.metadata.create_all(bind=engine_s)
     # metadata.create_all(bind=engine_s)
